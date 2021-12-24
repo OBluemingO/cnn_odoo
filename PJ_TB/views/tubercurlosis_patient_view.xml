@@ -39,12 +39,41 @@
     <field name="arch" type="xml">
       <form string="Patient Form">
         <sheet>
+          <div class="oe_button_box" name="appointment_button_box">
+            <button name="button_appointment" type="object" class="oe_stat_button" icon="fa-calendar">
+              <div class="o_field_widget o_stat_info">
+                <span class="o_stat_text">Appointment</span>
+                <field name="appointment_count" />
+              </div>
+            </button>
+            <button name="button_Laboratory" type="object" class="oe_stat_button" icon="fa-stethoscope">
+              <div class="o_field_widget o_stat_info">
+                <span class="o_stat_text">Laboratory</span>
+                <field name="laboratory_count" />
+
+              </div>
+            </button>
+            <button name="button_medicate" type="object" class="oe_stat_button" icon="fa-plus-circle">
+              <div class="o_field_widget o_stat_info">
+                <span class="o_stat_text">Medicate</span>
+                <field name="medicate_count" />
+              </div>
+            </button>
+            <button name="button_prescriptions" type="object" class="oe_stat_button" icon="fa-file-text-o">
+              <div class="o_field_widget o_stat_info">
+                <span class="o_stat_text">Prescriptions</span>
+              </div>
+            </button>
+          </div>
           <div class="oe_title">
             <h1>
               <field name="PT_name" placeholder="Name Patient"/>
             </h1>
           </div>
-          <group string='General Information'>
+          <div class='text-primary'>
+            <h3>General Information</h3>
+          </div>
+          <group>
             <group>
               <field name="PT_id_card"/>
               <field name="PT_gender"/>
@@ -62,45 +91,55 @@
               <group>
                 <group>
                   <field name="PT_congenital_disease"/>
+                </group>
+                <group>
                   <field name="PT_allergy"/>
                 </group>
               </group>
             </page>
-            <page string="Medication">
-              <group>
-                <field name="medicates" string='History Dispent Medicate'>
-                  <tree>
-                    <field name="medicate_seq" />
-                    <field name="date_dispensing" />
-                    <field name="date_appointment_medicate" />
-                    <field name="pharmacy" />
-                    <field name="medicate_state" />
-                    <field name="medicate_dispent_count" />
-                  </tree>
-                </field>
-              </group>
-            </page>
-            <page string="Vaccinations">
-              <!-- <field name="line_ids"/> -->
-            </page>
-            <page string="Lab Results">
-              <field name="lab_requsets" readonly="1">
-                <tree editable="bottom">
-                  <field name="lab_type"/>
-                  <field name="lab_date"/>
-                  <field name="lab_doctor"/>
+            <page string="Medication History">
+              <field name="medicates">
+                <tree>
+                  <field name="medicate_seq" />
+                  <field name="date_dispensing" />
+                  <field name="date_appointment_medicate" />
+                  <field name="pharmacy" />
+                  <field name="medicate_state" />
+                  <field name="medicate_dispent_count" />
                 </tree>
               </field>
             </page>
-            <page string="Lab Results">
-              <field name="patient_main_lines">
-                <tree>
-                  <field name="relation_id"/>
-                  <field name="labs_id"/>
-                  <!-- <field name="lab_type"/>
-                  <field name="lab_date"/>
-                  <field name="lab_doctor"/> -->
+            <page string="Lab Result">
+              <field name="lab_requsets">
+                <tree >
+                  <field name="lab_seq"/>
+                  <field name="lab_type"/>
+                  <field name="lab_state" decoration-danger="lab_state == 'draft'" decoration-info="lab_state == 'test'" decoration-success="lab_state == 'complate'"/>
                 </tree>
+                <form>
+                  <group>
+                    <group>
+                      <field name="lab_seq"/>
+                      <field name="lab_type"/>
+                      <field name="lab_state"/>
+                    </group>
+                    <group>
+                      <field name="lab_doctor"/>
+                    </group>
+                  </group>
+                  <notebook>
+                    <page string="Total Test">
+                      <field name="lab_tests">
+                        <tree create="false">
+                          <field name="lab_test" />
+                          <field name="lab_diagnosticresults" />
+                          <field name="lab_diagnosticresults_Complications" />
+                          <field name="lab_probility" />
+                        </tree>
+                      </field>
+                    </page>
+                  </notebook>
+                </form>
               </field>
             </page>
           </notebook>

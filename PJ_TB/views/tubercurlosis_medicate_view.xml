@@ -38,22 +38,15 @@
           </group>
           <notebook>
             <page string="List Medicate Dispent">
-              <group>
-                <field name="medicate_lists">
-                  <tree editable="bottom">
-                    <field name="medicament" />
-                    <field name="dose" />
-                    <field name="frequency" />
-                    <field name="treament_duration" />
-                    <field name="quantity" />
-                  </tree>
-                </field>
-              </group>
-            </page>
-            <page string="History Dispent">
-              <group>
-                <!-- <field name="medicate_history_id" /> -->
-              </group>
+              <field name="medicate_lists">
+                <tree editable="bottom">
+                  <field name="medicament" />
+                  <field name="dose" />
+                  <field name="frequency" />
+                  <field name="treament_duration" />
+                  <field name="quantity" />
+                </tree>
+              </field>
             </page>
           </notebook>
         </sheet>
@@ -71,7 +64,6 @@
         <field name="date_appointment_medicate" />
         <field name="pharmacy" />
         <field name="medicate_state"/>
-        <!-- <field name="medicate_dispent_count" force_save="1" /> -->
         <field name="medicate_dispent_count" />
       </tree>
     </field>

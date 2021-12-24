@@ -14,7 +14,8 @@ class Lab(models.Model):
     lab_type = fields.Selection(
         selection=[
             ("skin test", "Skin Test"),
-            ("blood test", "Blood test"),
+            ("blood test", "Blood Test"),
+            ("tb test", "Tubercusius Image Predict"),
         ],
         string="Test Type",
         default="skin test",
@@ -44,9 +45,10 @@ class Lab(models.Model):
     patient_id = fields.Many2one("hr.patient")
     partner_id = fields.Many2one("res.partner")
 
-    # patient_relation_lines = fields.One2many(
-    #     'hr.patient.line', 'labs_id'
-    # )
+    patient_relation_lines = fields.One2many(
+        'hr.patient.line', 'labs_id'
+    )
+
     lab_tests = fields.One2many(
         'ir.lab_test', 'request_id',
     )

@@ -21,6 +21,7 @@ class IRmedicate(models.Model):
     date_appointment_medicate = fields.Date(string="Date appointment Medicate")
 
     pharmacy = fields.Many2one("res.partner")
+    appointments = fields.One2many("ir.appointment", 'medicate_id')
 
     medicate_state = fields.Selection(
         [
@@ -30,11 +31,6 @@ class IRmedicate(models.Model):
         ],
         string="Medicate State",
     )
-
-    # compute_dispent_count = fields.Integer(
-    #     compute='count_patient',
-    #     store=False,
-    # )
 
     medicate_dispent_count = fields.Integer(
         string="Dispent Count",

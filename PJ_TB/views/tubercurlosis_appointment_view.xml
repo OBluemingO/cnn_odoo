@@ -14,7 +14,16 @@
     <field name="arch" type="xml">
       <form string="Appointment">
         <sheet>
-
+          <group>
+            <field name="patient_id" />
+            <field name="appointment_date" />
+            <field name="appointment_doctor" />
+          </group>
+          <notebook>
+            <page string="Comment">
+              <field name="appointment_comment" />
+            </page>
+          </notebook>
         </sheet>
       </form>
     </field>
@@ -25,7 +34,9 @@
     <field name="model">ir.appointment</field>
     <field name="arch" type="xml">
       <tree>
-
+        <field name="patient_id" />
+        <field name="appointment_date" />
+        <field name="appointment_doctor" />
       </tree>
     </field>
   </record>

@@ -68,11 +68,56 @@ class HrPatient(models.Model):
         default="a",
     )
 
-    lab_requsets = fields.One2many("ir.lab", "patient_id")
+    laboratory_count = fields.Integer(
+        string='Laboratory Count',
+        compute='compute_laboratory_count'
+    )
+
+    medicate_count = fields.Integer(
+        string='Medicate Count',
+        compute='compute_medicate_count'
+    )
+
+    appointment_count = fields.Integer(
+        string='Appointment Count',
+        compute='compute_appointment_count'
+    )
+
+    lab_requsets = fields.One2many("ir.lab", "patient_id", readonly=True)
     medicates = fields.One2many("ir.medicate", "patient_id", readonly=True)
     patient_main_lines = fields.One2many(
-        "hr.patient.line", "relation_id", readonly=True
+        "hr.patient.line", "relation_id"
     )
+
+    def compute_laboratory_count(self):
+        for rec in self:
+            count = self.env['ir.lab'].search_count(
+                [('patient_id', '=', rec.id)])
+
+            if count > 0:
+                rec.laboratory_count = count
+            else:
+                rec.laboratory_count = 0
+
+    def compute_appointment_count(self):
+        for rec in self:
+            count = self.env['ir.appointment'].search_count(
+                [('patient_id', '=', rec.id)])
+
+            if count > 0:
+                rec.appointment_count = count
+            else:
+                rec.appointment_count = 0
+
+    def compute_medicate_count(self):
+        for rec in self:
+            count = self.env['ir.medicate'].search_count(
+                [('patient_id', '=', rec.id)])
+
+            if count > 0:
+                rec.medicate_count = count
+            else:
+                rec.medicate_count = 0
 
     @api.constrains("PT_age")
     def _check_age(self):
@@ -112,6 +157,39 @@ class HrPatient(models.Model):
             raise UserError(
                 _('Identity Document Invaild'))
 
+    def button_appointment(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Appointment',
+            'res_model': 'ir.appointment',
+            'domain': [('patient_id', '=', self.id)],
+            'view_mode': 'tree,form',
+            'target': 'current',
+        }
+
+    def button_Laboratory(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Laboratory',
+            'res_model': 'ir.lab',
+            'domain': [('patient_id', '=', self.id)],
+            'view_mode': 'tree,form',
+            'target': 'current',
+        }
+
+    def button_medicate(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Medicate',
+            'res_model': 'ir.medicate',
+            'domain': [('patient_id', '=', self.id)],
+            'view_mode': 'tree,form',
+            'target': 'current',
+        }
+
+    def button_prescriptions(self):
+        pass
+
 
 class HrPatient_Line(models.Model):
 
@@ -122,6 +200,10 @@ class HrPatient_Line(models.Model):
 
     lab_seq = fields.Char(
         related='labs_id.lab_seq'
+    )
+
+    lab_names = fields.Char(
+        related='labs_id.patient_id.PT_name'
     )
 
     lab_type = fields.Selection(
@@ -143,3 +225,13 @@ class HrPatient_Line(models.Model):
     lab_state = fields.Selection(
         related='labs_id.lab_state'
     )
+
+    lab_probility = fields.Float(
+        related='labs_id.lab_tests.lab_probility'
+    )
+
+    @api.onchange('labs_id')
+    def auto_information_lab(self):
+        for rec in self:
+            if labs_id.patient_id.PT_name is 'phayuphat trilao':
+                pass

@@ -56,7 +56,10 @@ class LabTest(models.Model):
         related='lab_img'
     )
 
-    lab_probility = fields.Float(string='Probility', digits=(6, 2))
+    lab_probility = fields.Float(
+        string='Probility',
+        digits=(6, 2)
+    )
 
     path_project = Path.cwd()
     path = Path(
@@ -96,3 +99,8 @@ class LabTest(models.Model):
     def check_probility(self):
         if self.lab_probility < 80.0:
             raise UserWarning(_('input wrong img'))
+
+    @api.constrains('request_id')
+    def check_test_type(self):
+        if self.request_id.lab_type is 'tb test':
+            self.lab_test = 'tb'
