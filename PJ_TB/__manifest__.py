@@ -1,0 +1,30 @@
+{
+    "name": "TB_classification",
+    "author": "phayuphat trilao",
+    "version": "15.0.0.0.1",
+    "depends": [
+        "base",
+    ],
+    "data": [
+        "security/ir.model.access.csv",
+        "views/tubercurlosis_patient_view.xml",
+        "views/tubercurlosis_patient_prescriptions_view.xml",
+        "views/tubercurlosis_lab_view.xml",
+        "views/tubercurlosis_medicate_view.xml",
+        "views/tubercurlosis_appointment_view.xml",
+        "data/lab_request_sequence.xml",
+        "data/medicate_sequence.xml",
+        "views/tubercurlosis_lab_test_view.xml",
+        # 'reports/tb_patient_form_report.xml',
+    ],
+    "qweb": [
+        # 'static/src/xml/nama_widget.xml',
+    ],
+    "sequence": 1,
+    "auto_install": False,
+    "installable": True,
+    "application": True,
+    "category": "- Arkademy Part 1",
+    "summary": "Catat Penjualan Sederhana",
+    "description": "-",
+}

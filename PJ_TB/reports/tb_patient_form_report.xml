@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <!-- TODO: fix paperformat true value -->
+  <report id="action_report_patient_card" model="hr.patient" string="Patient Report" report_type="qweb-html" name="PJ_TB.report_patient_card" file="PJ_TB.report_patient_card" />
+
+  <!-- main template patient card -->
+  <template id="report_patient_card">
+    <t t-call="web.html_container">
+      <t t-foreach="docs" t-as="doc">
+        <t t-call="web.basic_layout">
+          <table width="100%">
+            <tr>
+              <td>
+                <t t-call="PJ_TB.report_patient_card_header"/>
+              </td>
+            </tr>
+            <tr>
+              <td>Title</td>
+            </tr>
+            <tr>
+              <td>detiall</td>
+            </tr>
+            <tr>
+              <td>Footer</td>
+            </tr>
+          </table>
+        </t>
+      </t>
+    </t>
+  </template>
+
+  <template id="report_patient_card_header">
+    <div class="row">
+      <div class="col-2">
+        <!-- <img src='' -->
+      </div>
+      <div class="col-1"/>
+      <div class="col-9">
+        <strong>
+          <span t-esc="doc.res.company.name" />
+        </strong>
+        <!-- <div>
+          <span t-esc="doc.res.company.street"/>
+          <span t-esc="doc.res.company.street2" />
+        </div> -->
+        <div>
+          <span t-esc="doc.res.company.phone"> โทร <span
+            t-esc='doc.res.company.phone'/></span>
+        </div>
+      </div>
+    </div>
+  </template>
+
+
+</odoo>

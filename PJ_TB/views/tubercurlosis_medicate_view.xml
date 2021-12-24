@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="medicate_action" model="ir.actions.act_window">
+    <field name="name">Medicate</field>
+    <field name="res_model">ir.medicate</field>
+    <field name="view_mode">tree,form</field>
+  </record>
+
+  <menuitem id="medicate_children_menu" name="Medicate" parent="medicate_menu" action="medicate_action" sequence ="3"/>
+
+  <record id="ir_medicate_view_form" model="ir.ui.view">
+    <field name="name">ir.medicate.view.form</field>
+    <field name="model">ir.medicate</field>
+    <field name="arch" type="xml">
+      <form string="Medicate">
+        <sheet>
+          <div class="oe_title">
+            <h1>
+              <field name="medicate_seq"/>
+            </h1>
+          </div>
+          <group string='Medicate Dispent'>
+            <group>
+              <field name="patient_id"/>
+              <field name="date_dispensing"/>
+              <field name="date_appointment_medicate"/>
+            </group>
+            <group>
+              <field name="medicate_state"/>
+              <!-- <field name="compute_dispent_count" invisible="1"/> -->
+              <field name="medicate_dispent_count"/>
+            </group>
+          </group>
+          <group string='Pharmacy'>
+            <group>
+              <field name="pharmacy" string='Name'/>
+            </group>
+          </group>
+          <notebook>
+            <page string="List Medicate Dispent">
+              <group>
+                <field name="medicate_lists">
+                  <tree editable="bottom">
+                    <field name="medicament" />
+                    <field name="dose" />
+                    <field name="frequency" />
+                    <field name="treament_duration" />
+                    <field name="quantity" />
+                  </tree>
+                </field>
+              </group>
+            </page>
+            <page string="History Dispent">
+              <group>
+                <!-- <field name="medicate_history_id" /> -->
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="ir_medicate_view_tree" model="ir.ui.view">
+    <field name="name">ir.medicate.view.tree</field>
+    <field name="model">ir.medicate</field>
+    <field name="arch" type="xml">
+      <tree>
+        <field name="medicate_seq" />
+        <field name="date_dispensing" />
+        <field name="date_appointment_medicate" />
+        <field name="pharmacy" />
+        <field name="medicate_state"/>
+        <!-- <field name="medicate_dispent_count" force_save="1" /> -->
+        <field name="medicate_dispent_count" />
+      </tree>
+    </field>
+  </record>
+</odoo>

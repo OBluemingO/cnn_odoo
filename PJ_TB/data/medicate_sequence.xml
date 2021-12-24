@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data noupdate="1">
+    <record model="ir.sequence" id="medicate_sequence">
+      <field name="name">medicate</field>
+      <field name="code">medicate.sequence</field>
+      <field name="active">TRUE</field>
+      <field name="prefix">MD_</field>
+      <field name="padding">6</field>
+      <field name="number_next">1</field>
+      <field name="number_increment">1</field>
+    </record>
+  </data>
+</odoo>

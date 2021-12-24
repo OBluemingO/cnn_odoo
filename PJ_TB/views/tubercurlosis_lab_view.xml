@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <record id="tb_lab_action" model="ir.actions.act_window">
+    <field name="name">Draft Lab</field>
+    <field name="res_model">ir.lab</field>
+    <field name="view_mode">tree,form</field>
+  </record>
+
+  <menuitem id="diagnostic_lab_menu" name="LAB" parent="diagnostic_menu" sequence="0" action="tb_lab_action"/>
+
+  <record id="ir_lab_view_form" model="ir.ui.view">
+    <field name="name">tb_lab_form</field>
+    <field name="model">ir.lab</field>
+    <field name="arch" type="xml">
+      <form string="Lab">
+        <header>
+          <button string="Draft" name="button_draft" type="object" class="btn-danger" confirm=" Are you sure that you need to do it." attrs="{'invisible': [('lab_state', '=', 'draft')]}"/>
+          <button string="Test In Progress" name="button_test" type="object" class="oe_highlight" attrs="{'invisible': [('lab_state', '=', 'test')]}" />
+          <button string="Complate" name="button_complate" type="object" class="oe_highlight" attrs="{'invisible': [('lab_state', '=', 'complate')]}" />
+          <button string="Invoice" name="button_invoice" type="object" class="oe_highlight" attrs="{'invisible': [('lab_state', '=', 'invoice')]}" />
+          <field name="lab_state" widget="statusbar"/>
+        </header>
+        <sheet>
+          <div class="oe_title">
+            <h1>
+              <field name="lab_seq"/>
+            </h1>
+          </div>
+          <group>
+            <group>
+              <field name="patient_id" placeholder="Select Patient"/>
+              <field name="lab_type"/>
+              <field name="lab_date" string="Date of Analysis"/>
+            </group>
+            <group>
+              <field name="lab_doctor" readonly="1"/>
+              <field name="lab_insurance"/>
+            </group>
+          </group>
+          <notebook>
+            <page string="TOTAL TESTCASE">
+              <field name="lab_tests" attrs="{'readonly': [('lab_state','!=', 'test')]}">
+                <tree>
+                  <field name="lab_test"/>
+                  <field name="lab_img"/>
+                  <field name="lab_diagnosticresults"/>
+                  <field name="lab_diagnosticresults_Complications"/>
+                </tree>
+              </field>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+
+  <record id="ir_lab_view_tree" model="ir.ui.view">
+    <field name="name">tb_lab_tree</field>
+    <field name="model">ir.lab</field>
+    <field name="arch" type="xml">
+      <tree>
+        <field name="lab_seq"/>
+        <field name="lab_type"/>
+        <field name="lab_date"/>
+        <field name="lab_state"/>
+      </tree>
+    </field>
+  </record>
+
+
+
+</odoo>
