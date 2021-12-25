@@ -18,7 +18,7 @@ class IRmedicatelist(models.Model):
             ("ethambutol", "Ethambutol"),
             ("isoniazid and rifampicin", "Isoniazid and Rifampicin"),
         ],
-        default="isoniazid",
+        default="isoniazid and rifampicin",
         required=True,
     )
 
@@ -44,3 +44,54 @@ class IRmedicatelist(models.Model):
         ],
         default="daily",
     )
+
+    unit_price = fields.Integer(
+        string='Unit price',
+        store=True,
+        compute='compute_unit_price'
+    )
+
+    total_amount = fields.Integer(
+        string='Total Amount',
+        compute='compute_total',
+        store=True,
+    )
+
+    @api.depends('medicament', 'quantity')
+    def compute_unit_price(self):
+        for rec in self:
+            if rec.quantity:
+                if rec.medicament == 'isoniazid':
+                    rec.unit_price = 150 * rec.quantity
+
+                if rec.medicament == 'rifampicin':
+                    rec.unit_price = 170 * rec.quantity
+
+                if rec.medicament == 'pyrazinamide':
+                    rec.unit_price = 120 * rec.quantity
+
+                if rec.medicament == 'ethambutol':
+                    rec.unit_price = 100 * rec.quantity
+
+                if rec.medicament == 'isoniazid and rifampicin':
+                    rec.unit_price = 200 * rec.quantity
+
+            else:
+                if rec.medicament == 'isoniazid':
+                    rec.unit_price = 150
+
+                if rec.medicament == 'rifampicin':
+                    rec.unit_price = 170
+
+                if rec.medicament == 'pyrazinamide':
+                    rec.unit_price = 120
+
+                if rec.medicament == 'ethambutol':
+                    rec.unit_price = 100
+
+                if rec.medicament == 'isoniazid and rifampicin':
+                    rec.unit_price = 200
+
+    @api.constrains('medicament')
+    def compute_total_amont(self):
+        pass

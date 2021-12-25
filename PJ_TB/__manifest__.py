@@ -15,8 +15,7 @@
         "data/lab_request_sequence.xml",
         "data/medicate_sequence.xml",
         "views/tubercurlosis_lab_test_view.xml",
-        # "views/tubercurlosis_patient_one2many_form_view.xml",
-        # 'reports/tb_patient_form_report.xml',
+        'reports/tb_medicate_report.xml',
     ],
     "qweb": [
         # 'static/src/xml/nama_widget.xml',

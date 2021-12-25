@@ -45,8 +45,8 @@
           <span t-esc="doc.res.company.street2" />
         </div> -->
         <div>
-          <span t-esc="doc.res.company.phone"> โทร <span
-            t-esc='doc.res.company.phone'/></span>
+          <span t-esc="doc.res.company.phone"> โทร            <span t-esc='doc.res.company.phone'/>
+          </span>
         </div>
       </div>
     </div>

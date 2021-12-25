@@ -11,6 +11,9 @@ class IRmedicate(models.Model):
     prescription_id = fields.Many2one("ir.prescription")
     medicate_lists = fields.One2many("ir.medicate_list", "medicate_id")
 
+    patient_name = fields.Char(
+        related='patient_id.PT_name'
+    )
     medicate_seq = fields.Char(
         string="Dispent Number", readonly=True, required=True, copy=False, default="New"
     )
@@ -21,7 +24,6 @@ class IRmedicate(models.Model):
     date_appointment_medicate = fields.Date(string="Date appointment Medicate")
 
     pharmacy = fields.Many2one("res.partner")
-    appointments = fields.One2many("ir.appointment", 'medicate_id')
 
     medicate_state = fields.Selection(
         [

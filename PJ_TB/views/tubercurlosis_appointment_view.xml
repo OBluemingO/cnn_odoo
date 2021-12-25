@@ -3,7 +3,7 @@
   <record id="appointment_action" model="ir.actions.act_window">
     <field name="name">Appointment</field>
     <field name="res_model">ir.appointment</field>
-    <field name="view_mode">tree,form</field>
+    <field name="view_mode">calendar,tree,form</field>
   </record>
 
   <menuitem id="appointment_children_menu" name="Appointment" parent="appointments_menu" action="appointment_action"/>
@@ -40,4 +40,17 @@
       </tree>
     </field>
   </record>
+
+  <record id="ir_appointment_view_calandar" model="ir.ui.view">
+    <field name="name">ir.appointment.view.calandar</field>
+    <field name="model">ir.appointment</field>
+    <field name="arch" type="xml">
+      <calendar date_start="appointment_date" mode='month'>
+        <field name="patient_id" />
+        <field name="appointment_doctor" />
+        <field name="appointment_comment" />
+      </calendar>
+    </field>
+  </record>
+
 </odoo>

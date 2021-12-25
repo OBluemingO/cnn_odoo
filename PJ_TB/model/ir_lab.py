@@ -26,7 +26,17 @@ class Lab(models.Model):
         string="Doctor", default=lambda self: self.create_by_doctor()
     )
 
-    lab_date = fields.Char(string="Date", default=fields.Date.today())
+    lab_date = fields.Char(
+        string="Date of Analysis",
+        compute='cumpute_auto_date',
+        store=True,
+    )
+
+    lab_date_end = fields.Char(
+        string="Date of Complate",
+        compute='cumpute_auto_date_end',
+        store=True,
+    )
 
     # ใบกำกับภาษี
     lab_insurance = fields.Boolean(string="invoice to insurance")
@@ -74,6 +84,23 @@ class Lab(models.Model):
             if user == user_create:
                 user_id = user_create.partner_id
         return user_id.name
+
+    @api.depends('lab_state')
+    def cumpute_auto_date(self):
+        for rec in self:
+            if rec.lab_state == 'test':
+                rec.lab_date = fields.Date.today()
+
+            if rec.lab_state == 'draft':
+                rec.lab_date = ''
+
+    @api.depends('lab_state')
+    def cumpute_auto_date_end(self):
+        for rec in self:
+            if rec.lab_state == 'complate':
+                rec.lab_date_end = fields.Date.today()
+            else:
+                rec.lab_date_end = ''
 
     def button_test(self):
         self.lab_state = "test"

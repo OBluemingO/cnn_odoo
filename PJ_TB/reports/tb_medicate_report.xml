@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <report id="report_medicate_appointment" model="ir.medicate" string="Medicate Detail" report_type="qweb-html" name="PJ_TB.report_medicate_appointment" file="PJ_TB.report_medicate_appointment" />
+
+  <template id="report_medicate_appointment">
+    <t t-foreach="docs" t-as="doc">
+      <t t-call="web.html_container">
+        <t t-call="web.external_layout">
+          <div class="page">
+            <h2>
+              <strong>Order: </strong>
+              <span t-field="doc.medicate_seq"/>
+            </h2>
+            <div>
+              <strong>Patient Name: </strong>
+              <span t-field="doc.patient_name"/>
+            </div>
+            <div>
+              <strong>Appointment: </strong>
+              <span t-field="doc.date_appointment_medicate"/>
+            </div>
+            <div>
+              <strong>Status: </strong>
+              <span t-field="doc.medicate_state"/>
+            </div>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Medicament</th>
+                  <th>Dose</th>
+                  <th>Quantity</th>
+                </tr>
+              </thead>
+              <tbody>
+                <t t-set="drugs" t-value="doc.mapped('medicate_lists')"/>
+                <tr t-foreach="drugs" t-as="drug">
+                  <td>
+                    <span t-field="drug.medicament"/>
+                  </td>
+                  <td>
+                    <span t-field="drug.dose"/>
+                  </td>
+                  <td>
+                    <span t-field="drug.quantity"/>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </t>
+      </t>
+    </t>
+  </template>
+
+
+</odoo>

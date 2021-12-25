@@ -31,11 +31,12 @@
             <group>
               <field name="patient_id" placeholder="Select Patient"/>
               <field name="lab_type"/>
-              <field name="lab_date" string="Date of Analysis"/>
+              <field name="lab_date"/>
             </group>
             <group>
               <field name="lab_doctor" readonly="1"/>
               <field name="lab_insurance"/>
+              <field name="lab_date_end"/>
             </group>
           </group>
           <notebook>
@@ -65,6 +66,7 @@
         <field name="patient_id"/>
         <field name="lab_type"/>
         <field name="lab_date"/>
+        <field name="lab_date_end"/>
         <field name="lab_state"/>
       </tree>
     </field>
