@@ -1,6 +1,6 @@
-from datetime import date
+from datetime import date, datetime
 from odoo import models, fields, api, _
-from odoo.exceptions import AccessError, MissingError, UserError
+from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 import re
 
 
@@ -68,26 +68,73 @@ class HrPatient(models.Model):
         default="a",
     )
 
+    PT_member = fields.Selection(
+        selection=[
+            ("new", "New"),
+            ("old", "Old"),
+        ],
+        string="Patient Member",
+        compute='compute_new_patient_today',
+    )
     laboratory_count = fields.Integer(
         string='Laboratory Count',
-        compute='compute_laboratory_count'
+        compute='compute_laboratory_count',
+        store=True
     )
 
     medicate_count = fields.Integer(
         string='Medicate Count',
-        compute='compute_medicate_count'
+        compute='compute_medicate_count',
+        store=True
     )
 
     appointment_count = fields.Integer(
         string='Appointment Count',
-        compute='compute_appointment_count'
+        compute='compute_appointment_count',
+        store=True
     )
 
-    lab_requsets = fields.One2many("ir.lab", "patient_id", readonly=True)
-    medicates = fields.One2many("ir.medicate", "patient_id", readonly=True)
-    patient_main_lines = fields.One2many(
-        "hr.patient.line", "relation_id"
+    lab_requsets = fields.One2many(
+        "ir.lab",
+        "patient_id",
+        readonly=True
     )
+
+    medicates = fields.One2many(
+        "ir.medicate",
+        "patient_id",
+        readonly=True
+    )
+
+    patient_main_lines = fields.One2many(
+        "hr.patient.line",
+        "relation_id"
+    )
+
+    # doctors_id = fields.Many2one(
+    #     'hr.doctor',
+    #     default=lambda self: self.create_by_doctor()
+    # )
+
+    # TODO setup field unique for patient name
+    _sql_constraints = [
+        ('PT_name', 'unique (PT_name)', "The patient name already Exists!"),
+    ]
+
+    def compute_new_patient_today(self):
+        for rec in self:
+            rec.PT_member = 'old'
+            create_date = str(rec.create_date).split()
+            if create_date[0] == str(date.today()):
+                rec.PT_member = 'new'
+
+    # def create_by_doctor(self):
+    #     users = self.env["res.users"].search([])
+    #     for user in users:
+    #         user_create = self.env.user
+    #         if user == user_create:
+    #             user_id = user_create.partner_id
+    #     return user_id
 
     def compute_laboratory_count(self):
         for rec in self:
@@ -229,9 +276,3 @@ class HrPatient_Line(models.Model):
     lab_probility = fields.Float(
         related='labs_id.lab_tests.lab_probility'
     )
-
-    @api.onchange('labs_id')
-    def auto_information_lab(self):
-        for rec in self:
-            if labs_id.patient_id.PT_name is 'phayuphat trilao':
-                pass

@@ -29,6 +29,7 @@
         <field name="PT_gender"/>
         <field name="PT_age"/>
         <field name="PT_address"/>
+        <field name="PT_member"/>
       </tree>
     </field>
   </record>
@@ -57,11 +58,6 @@
               <div class="o_field_widget o_stat_info">
                 <span class="o_stat_text">Medicate</span>
                 <field name="medicate_count" />
-              </div>
-            </button>
-            <button name="button_prescriptions" type="object" class="oe_stat_button" icon="fa-file-text-o">
-              <div class="o_field_widget o_stat_info">
-                <span class="o_stat_text">Prescriptions</span>
               </div>
             </button>
           </div>
@@ -141,6 +137,9 @@
                   </notebook>
                 </form>
               </field>
+            </page>
+            <page string="responsible by">
+              <!-- <field name="doctors_id"/> -->
             </page>
           </notebook>
         </sheet>

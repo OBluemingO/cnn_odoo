@@ -5,6 +5,11 @@
     <field name="name">Draft Lab</field>
     <field name="res_model">ir.lab</field>
     <field name="view_mode">tree,form</field>
+    <field name="help" type="html">
+      <p class="oe_view_nocontent_create">
+        Create the first Laboratory
+      </p>
+    </field>
   </record>
 
   <menuitem id="diagnostic_lab_menu" name="LAB" parent="diagnostic_menu" sequence="0" action="tb_lab_action"/>
@@ -15,10 +20,10 @@
     <field name="arch" type="xml">
       <form string="Lab">
         <header>
-          <button string="Draft" name="button_draft" type="object" class="btn-danger" confirm=" Are you sure that you need to do it." attrs="{'invisible': [('lab_state', '=', 'draft')]}"/>
-          <button string="Test In Progress" name="button_test" type="object" class="oe_highlight" attrs="{'invisible': [('lab_state', '=', 'test')]}" />
-          <button string="Complate" name="button_complate" type="object" class="oe_highlight" attrs="{'invisible': [('lab_state', '=', 'complate')]}" />
-          <button string="Invoice" name="button_invoice" type="object" class="oe_highlight" attrs="{'invisible': [('lab_state', '=', 'invoice')]}" />
+          <button string="Draft" name="button_draft" type="object" class="btn-danger" confirm=" Are you sure that you need to do it." attrs="{'invisible': [('lab_state','in', ('draft','invoice','complate'))]}"/>
+          <button string="Test In Progress" name="button_test" type="object" class="oe_highlight" attrs="{'invisible': [('lab_state','in', ('test','invoice'))]}" />
+          <button string="Complate" name="button_complate" type="object" class="oe_highlight" attrs="{'invisible': [('lab_state','in', ('complate','draft'))]}" />
+          <button string="Invoice" name="button_invoice" type="object" class="oe_highlight" attrs="{'invisible': [('lab_state', 'in', ('invoice','draft','test'))]}" />
           <field name="lab_state" widget="statusbar"/>
         </header>
         <sheet>
@@ -71,7 +76,4 @@
       </tree>
     </field>
   </record>
-
-
-
 </odoo>

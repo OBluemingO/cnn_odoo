@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <record model="ir.actions.act_window" id="doctor_action">
+    <field name="name">Doctor</field>
+    <field name="res_model">hr.doctor</field>
+    <field name="view_mode">tree,form</field>
+    <field name="help" type="html">
+      <p class="oe_view_nocontent_create">
+        Create the first Doctor
+      </p>
+    </field>
+  </record>
+
+  <menuitem id="main_tb_menu" name="Hospital Tuberculosis" />
+  <menuitem id="doctor_root_menu" name="Doctor" parent="main_tb_menu" sequence ="0"/>
+  <menuitem id="doctor_menu" name="Doctor" parent="doctor_root_menu" action="doctor_action" sequence ="1"/>
+
+
+  <record model="ir.ui.view" id="hr_doctor_view_tree">
+    <field name="name">tb_doctor_tree</field>
+    <field name="model">hr.doctor</field>
+    <field name="arch" type="xml">
+      <tree>
+        <field name="DT_name"/>
+        <field name="DT_gender"/>
+        <field name="DT_age"/>
+      </tree>
+    </field>
+  </record>
+
+  <record id="hr_doctor_view_form" model="ir.ui.view">
+    <field name="name">tb_doctor_form</field>
+    <field name="model">hr.doctor</field>
+    <field name="arch" type="xml">
+      <form string="Doctor Form">
+        <sheet>
+          <div class="oe_title">
+            <h1>
+              <field name="DT_name" placeholder="Name Doctor"/>
+            </h1>
+          </div>
+          <group>
+            <group>
+              <field name="DT_age"/>
+            </group>
+            <group>
+              <field name="DT_gender"/>
+            </group>
+          </group>
+          <notebook>
+            <page string="Total case patient responsible">
+              <field name="patient_totals">
+                <tree>
+                  <field name="PT_name" />
+                </tree>
+              </field>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+</odoo>

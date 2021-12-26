@@ -1,4 +1,5 @@
 from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError
 
 
 class IRmedicatelist(models.Model):
@@ -6,8 +7,6 @@ class IRmedicatelist(models.Model):
     _rec_name = "medicament"
 
     medicate_id = fields.Many2one("ir.medicate")
-    # TODO: add infomation about history medicate and display data by using many2one
-    # medicate_history_id = fields.Many2one("ir.medicate_history")
     # prescription_id = fields.Many2one("ir.prescription")
 
     medicament = fields.Selection(
@@ -22,7 +21,10 @@ class IRmedicatelist(models.Model):
         required=True,
     )
 
-    quantity = fields.Integer(size=10)
+    quantity = fields.Integer(
+        default=1,
+        size=10
+    )
 
     dose = fields.Char(required=True)
 
@@ -45,16 +47,10 @@ class IRmedicatelist(models.Model):
         default="daily",
     )
 
-    unit_price = fields.Integer(
+    unit_price = fields.Float(
         string='Unit price',
         store=True,
         compute='compute_unit_price'
-    )
-
-    total_amount = fields.Integer(
-        string='Total Amount',
-        compute='compute_total',
-        store=True,
     )
 
     @api.depends('medicament', 'quantity')
@@ -75,23 +71,3 @@ class IRmedicatelist(models.Model):
 
                 if rec.medicament == 'isoniazid and rifampicin':
                     rec.unit_price = 200 * rec.quantity
-
-            else:
-                if rec.medicament == 'isoniazid':
-                    rec.unit_price = 150
-
-                if rec.medicament == 'rifampicin':
-                    rec.unit_price = 170
-
-                if rec.medicament == 'pyrazinamide':
-                    rec.unit_price = 120
-
-                if rec.medicament == 'ethambutol':
-                    rec.unit_price = 100
-
-                if rec.medicament == 'isoniazid and rifampicin':
-                    rec.unit_price = 200
-
-    @api.constrains('medicament')
-    def compute_total_amont(self):
-        pass

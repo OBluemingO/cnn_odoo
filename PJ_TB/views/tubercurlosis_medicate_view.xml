@@ -4,6 +4,11 @@
     <field name="name">Medicate</field>
     <field name="res_model">ir.medicate</field>
     <field name="view_mode">tree,form</field>
+    <field name="help" type="html">
+      <p class="oe_view_nocontent_create">
+        Create the first Medicate
+      </p>
+    </field>
   </record>
 
   <menuitem id="medicate_children_menu" name="Medicate" parent="medicate_menu" action="medicate_action" sequence ="3"/>
@@ -47,6 +52,9 @@
                   <field name="unit_price" force_save='1'/>
                 </tree>
               </field>
+              <group class="oe_subtotal_footer oe_right">
+                <field name="medicate_total"/>
+              </group>
             </page>
           </notebook>
         </sheet>

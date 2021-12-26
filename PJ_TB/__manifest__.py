@@ -7,9 +7,11 @@
     ],
     "data": [
         "security/ir.model.access.csv",
+        "security/hospital_security.xml",
         "views/tubercurlosis_patient_view.xml",
-        "views/tubercurlosis_patient_prescriptions_view.xml",
+        # "views/tubercurlosis_patient_prescriptions_view.xml",
         "views/tubercurlosis_lab_view.xml",
+        # "views/tubercurlosis_doctor_view.xml",
         "views/tubercurlosis_medicate_view.xml",
         "views/tubercurlosis_appointment_view.xml",
         "data/lab_request_sequence.xml",
