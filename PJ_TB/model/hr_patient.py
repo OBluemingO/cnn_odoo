@@ -79,19 +79,16 @@ class HrPatient(models.Model):
     laboratory_count = fields.Integer(
         string='Laboratory Count',
         compute='compute_laboratory_count',
-        store=True
     )
 
     medicate_count = fields.Integer(
         string='Medicate Count',
         compute='compute_medicate_count',
-        store=True
     )
 
     appointment_count = fields.Integer(
         string='Appointment Count',
         compute='compute_appointment_count',
-        store=True
     )
 
     lab_requsets = fields.One2many(
@@ -116,10 +113,13 @@ class HrPatient(models.Model):
     #     default=lambda self: self.create_by_doctor()
     # )
 
-    # TODO setup field unique for patient name
-    _sql_constraints = [
-        ('PT_name', 'unique (PT_name)', "The patient name already Exists!"),
-    ]
+    @api.constrains('PT_name')
+    def _check_name_unique(self):
+        patient_count = self.search_count(
+            [('PT_name', '=', self.PT_name), ('id', '!=', self.id)]
+        )
+        if patient_count > 0:
+            raise ValidationError(_("patient name already exists !"))
 
     def compute_new_patient_today(self):
         for rec in self:

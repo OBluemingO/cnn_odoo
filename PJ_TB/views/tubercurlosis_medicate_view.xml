@@ -11,7 +11,7 @@
     </field>
   </record>
 
-  <menuitem id="medicate_children_menu" name="Medicate" parent="medicate_menu" action="medicate_action" sequence ="3"/>
+  <menuitem id="medicate_children_menu" name="Medicate" parent="medicate_menu" action="medicate_action" sequence ="3" groups="PJ_TB.group_hospital_doctor"/>
 
   <record id="ir_medicate_view_form" model="ir.ui.view">
     <field name="name">ir.medicate.view.form</field>

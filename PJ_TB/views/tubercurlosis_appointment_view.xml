@@ -11,7 +11,7 @@
     </field>
   </record>
 
-  <menuitem id="appointment_children_menu" name="Appointment" parent="appointments_menu" action="appointment_action"/>
+  <menuitem id="appointment_children_menu" name="Appointment" parent="appointments_menu" action="appointment_action" groups="PJ_TB.group_hospital_doctor"/>
 
   <record id="ir_appointment_view_form" model="ir.ui.view">
     <field name="name">ir.appointment.view.form</field>

@@ -12,7 +12,7 @@
     </field>
   </record>
 
-  <menuitem id="diagnostic_lab_menu" name="LAB" parent="diagnostic_menu" sequence="0" action="tb_lab_action"/>
+  <menuitem id="diagnostic_lab_menu" name="LAB" parent="diagnostic_menu" sequence="0" action="tb_lab_action" groups="PJ_TB.group_hospital_doctor"/>
 
   <record id="ir_lab_view_form" model="ir.ui.view">
     <field name="name">tb_lab_form</field>

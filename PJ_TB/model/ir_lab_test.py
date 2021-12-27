@@ -95,11 +95,6 @@ class LabTest(models.Model):
             self.lab_probility = 0
             self.lab_diagnosticresults = ''
 
-    @api.constrains('lab_probility')
-    def check_probility(self):
-        if self.lab_probility < 80.0:
-            raise UserWarning(_('input wrong img'))
-
     @api.constrains('request_id')
     def check_test_type(self):
         if self.request_id.lab_type is 'tb test':

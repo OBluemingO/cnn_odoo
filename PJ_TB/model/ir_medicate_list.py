@@ -71,3 +71,12 @@ class IRmedicatelist(models.Model):
 
                 if rec.medicament == 'isoniazid and rifampicin':
                     rec.unit_price = 200 * rec.quantity
+
+    # @api.constrains('medicament')
+    # def _check_dupicate_drug(self):
+    #     medicate_count = self.search_count(
+    #         [('medicament', '=', self.medicament), ('id', '!=', self.id)]
+    #     )
+    #     print(medicate_count, '===========================================')
+    #     if medicate_count > 0:
+    #         raise ValidationError(_("medicate already exists !"))

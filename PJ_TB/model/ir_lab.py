@@ -1,5 +1,6 @@
-from odoo import models, fields, api
+from odoo import models, fields, api, _
 from datetime import datetime
+from odoo.exceptions import ValidationError
 import pytz
 
 
@@ -106,10 +107,22 @@ class Lab(models.Model):
         self.lab_state = "test"
 
     def button_complate(self):
-        self.lab_state = "complate"
+        for rec in self:
+            if not rec.lab_tests.lab_diagnosticresults:
+                raise ValidationError(_("Plase add lab test"))
+            self.lab_state = "complate"
 
     def button_invoice(self):
         self.lab_state = "invoice"
 
     def button_draft(self):
         self.lab_state = "draft"
+        for rec in self:
+            rec.lab_tests = [(5, 0, 0)]
+
+    def unlink(self):
+        if self.lab_state in ('test', 'invoice', 'complate'):
+            raise ValidationError(
+                _(f"Can't Delete Lab {self.patient_id.PT_name} In State {self.lab_state}"))
+        else:
+            return super(Lab, self).unlink()
