@@ -14,12 +14,11 @@ class Lab(models.Model):
 
     lab_type = fields.Selection(
         selection=[
-            ("skin test", "Skin Test"),
             ("blood test", "Blood Test"),
             ("tb test", "Tubercusius Image Predict"),
         ],
         string="Test Type",
-        default="skin test",
+        default="blood test",
         required=True,
     )
 
@@ -62,6 +61,10 @@ class Lab(models.Model):
 
     lab_tests = fields.One2many(
         'ir.lab_test', 'request_id',
+    )
+
+    lab_blood_ids = fields.One2many(
+        'ir.lab_test_blood', 'lab_id',
     )
 
     timezone = pytz.timezone("Asia/Bangkok")
@@ -119,6 +122,7 @@ class Lab(models.Model):
         self.lab_state = "draft"
         for rec in self:
             rec.lab_tests = [(5, 0, 0)]
+            rec.lab_blood_ids = [(5, 0, 0)]
 
     def unlink(self):
         if self.lab_state in ('test', 'invoice', 'complate'):
@@ -126,3 +130,12 @@ class Lab(models.Model):
                 _(f"Can't Delete Lab {self.patient_id.PT_name} In State {self.lab_state}"))
         else:
             return super(Lab, self).unlink()
+
+    @api.onchange('lab_type')
+    def _onchange_lab_type(self):
+        for rec in self:
+            if rec.lab_type == 'tb test':
+                rec.lab_tests = [(5, 0, 0)]
+
+            if rec.lab_type == 'blood test':
+                rec.lab_blood_ids = [(5, 0, 0)]

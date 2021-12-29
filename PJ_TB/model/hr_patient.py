@@ -76,6 +76,12 @@ class HrPatient(models.Model):
         string="Patient Member",
         compute='compute_new_patient_today',
     )
+
+    PT_status = fields.Boolean(
+        string='Status',
+        compute='_compute_status',
+    )
+
     laboratory_count = fields.Integer(
         string='Laboratory Count',
         compute='compute_laboratory_count',
@@ -103,15 +109,15 @@ class HrPatient(models.Model):
         readonly=True
     )
 
+    doctors_id = fields.Many2one(
+        'hr.doctor',
+        domain=[('DT_status', '=', 'null')]
+    )
+
     patient_main_lines = fields.One2many(
         "hr.patient.line",
         "relation_id"
     )
-
-    # doctors_id = fields.Many2one(
-    #     'hr.doctor',
-    #     default=lambda self: self.create_by_doctor()
-    # )
 
     @api.constrains('PT_name')
     def _check_name_unique(self):
@@ -127,14 +133,6 @@ class HrPatient(models.Model):
             create_date = str(rec.create_date).split()
             if create_date[0] == str(date.today()):
                 rec.PT_member = 'new'
-
-    # def create_by_doctor(self):
-    #     users = self.env["res.users"].search([])
-    #     for user in users:
-    #         user_create = self.env.user
-    #         if user == user_create:
-    #             user_id = user_create.partner_id
-    #     return user_id
 
     def compute_laboratory_count(self):
         for rec in self:
@@ -165,6 +163,21 @@ class HrPatient(models.Model):
                 rec.medicate_count = count
             else:
                 rec.medicate_count = 0
+
+    def _compute_status(self):
+        for rec in self:
+            rec.PT_status = False
+            list_state = rec.env['ir.lab'].search(
+                [('patient_id', '=', rec.PT_name)])
+
+            if list_state:
+                count = 0
+                for r in list_state:
+                    if r.lab_state == 'complate':
+                        count += 1
+
+                if count == len(list_state):
+                    rec.PT_status = True
 
     @api.constrains("PT_age")
     def _check_age(self):

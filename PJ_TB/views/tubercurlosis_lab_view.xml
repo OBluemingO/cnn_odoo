@@ -45,13 +45,21 @@
             </group>
           </group>
           <notebook>
-            <page string="TOTAL TESTCASE">
+            <page string="Total Imagie Tubercurlosis Test" attrs="{'invisible': [('lab_type','!=', 'tb test')]}">
               <field name="lab_tests" attrs="{'readonly': [('lab_state','!=', 'test')]}">
                 <tree>
-                  <field name="lab_test"/>
                   <field name="lab_img"/>
                   <field name="lab_diagnosticresults"/>
                   <field name="lab_diagnosticresults_Complications"/>
+                </tree>
+              </field>
+            </page>
+            <page string="Total Blood Test" attrs="{'invisible': [('lab_type','!=', 'blood test')]}">
+              <field name="lab_blood_ids" attrs="{'readonly': [('lab_state','!=', 'test')]}">
+                <tree>
+                  <field name="lab_blood_type"/>
+                  <field name="lab_blood_range"/>
+                  <field name="lab_blood_normal"/>
                 </tree>
               </field>
             </page>

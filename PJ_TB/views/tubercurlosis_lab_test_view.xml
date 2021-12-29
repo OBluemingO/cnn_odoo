@@ -9,19 +9,18 @@
         <sheet>
           <group>
             <group>
-              <field name="lab_test"/>
-              <field name="lab_img" attrs="{'invisible': [('lab_test','!=', 'tb')]}"/>
+              <field name="lab_img"/>
             </group>
             <group>
-              <field name="img_preview" widget="image" attrs="{'invisible': [('lab_test','!=', 'tb')]}" readonly="1" options='{"size": [150, 140]}'/>
-              <field name="lab_probility" widget="progressbar" attrs="{'invisible': [('lab_test','!=', 'tb')]}"/>
+              <field name="img_preview" string="Imagie Preview" widget="image" readonly="1" options='{"size": [150, 140]}'/>
+              <field name="lab_probility" widget="progressbar"/>
             </group>
           </group>
           <notebook>
             <page string="result">
               <group>
-                <field name="lab_diagnosticresults" attrs="{'invisible': [('lab_test','!=', 'tb')]}" force_save="1"/>
-                <field name="lab_diagnosticresults_Complications" attrs="{'invisible': [('lab_test','!=', 'tb')]}"/>
+                <field name="lab_diagnosticresults" force_save="1"/>
+                <field name="lab_diagnosticresults_Complications"/>
               </group>
             </page>
           </notebook>

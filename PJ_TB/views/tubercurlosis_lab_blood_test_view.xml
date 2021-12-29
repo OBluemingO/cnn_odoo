@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <record id="ir_lab_blood_test_view_form" model="ir.ui.view">
+    <field name="name">tb_lab_blood_test_form</field>
+    <field name="model">ir.lab_test_blood</field>
+    <field name="arch" type="xml">
+      <form string="Lab Blood Test">
+        <sheet>
+          <group>
+            <field name="lab_blood_type"/>
+          </group>
+          <group>
+            <group>
+              <field name="lab_blood_range"/>
+            </group>
+            <group>
+              <field name="lab_blood_normal"/>
+            </group>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+</odoo>

@@ -24,7 +24,7 @@ class LabTest(models.Model):
             ("tuberculosis", "TUBERCULOSIS"),
         ],
         string="Diagnostic Result",
-        required=True,
+        # required=True,
         readonly=True,
         store=True,
     )
@@ -35,16 +35,6 @@ class LabTest(models.Model):
             ("pleural effusion", "ภาวะน้ำในช่องหุ้มปอด"),
         ],
         string="Complications Result",
-    )
-
-    lab_test = fields.Selection(
-        [
-            ("wb", "White Blood test"),
-            ("rb", "Red Blood test"),
-            ("tb", "Tuberculosis test"),
-        ],
-        string="Test Name",
-        required=True
     )
 
     lab_img = fields.Binary(
@@ -65,6 +55,10 @@ class LabTest(models.Model):
     path = Path(
         path_project / 'custom_addons/PJ_TB/static/model_h5/clasification_lr_model.h5')
     model = load_model(path)
+
+    @api.depends('request_id.lab_type')
+    def _compute_select_lab(self):
+        pass
 
     @api.onchange('lab_img')
     def analysis_cnn_model(self):
@@ -94,8 +88,3 @@ class LabTest(models.Model):
         else:
             self.lab_probility = 0
             self.lab_diagnosticresults = ''
-
-    @api.constrains('request_id')
-    def check_test_type(self):
-        if self.request_id.lab_type is 'tb test':
-            self.lab_test = 'tb'
