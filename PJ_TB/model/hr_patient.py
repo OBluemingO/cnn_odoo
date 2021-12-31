@@ -1,6 +1,7 @@
 from datetime import date, datetime
 from odoo import models, fields, api, _
 from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
+import pytz
 import re
 
 
@@ -80,6 +81,7 @@ class HrPatient(models.Model):
     PT_status = fields.Boolean(
         string='Status',
         compute='_compute_status',
+        store=True
     )
 
     laboratory_count = fields.Integer(
@@ -109,14 +111,16 @@ class HrPatient(models.Model):
         readonly=True
     )
 
-    doctors_id = fields.Many2one(
-        'hr.doctor',
-        domain=[('DT_status', '=', 'null')]
+    appointment = fields.One2many(
+        "ir.appointment",
+        "patient_id",
+        readonly=True
     )
 
-    patient_main_lines = fields.One2many(
-        "hr.patient.line",
-        "relation_id"
+    doctors_id = fields.Many2one(
+        'hr.doctor',
+        domain=[('DT_status', '=', 'null')],
+        required=True,
     )
 
     @api.constrains('PT_name')
@@ -164,20 +168,34 @@ class HrPatient(models.Model):
             else:
                 rec.medicate_count = 0
 
+    @api.depends('lab_requsets.lab_state', 'appointment.appointment_date')
     def _compute_status(self):
+        timezone = pytz.timezone("Asia/Bangkok")
+        now = datetime.now(tz=timezone)
+        dt_string = now.strftime("%Y-%m-%d")
+
         for rec in self:
             rec.PT_status = False
             list_state = rec.env['ir.lab'].search(
                 [('patient_id', '=', rec.PT_name)])
+
+            appointments = rec.env['ir.appointment'].search(
+                [('patient_id.PT_name', '=', rec.PT_name)])
 
             if list_state:
                 count = 0
                 for r in list_state:
                     if r.lab_state == 'complate':
                         count += 1
-
                 if count == len(list_state):
                     rec.PT_status = True
+                    if len(appointments) > 1:
+                        if appointments[-1].appointment_date != appointments[-2].appointment_date:
+                            rec.PT_status = True
+                    else:
+                        date_appointment = appointments.appointment_date
+                        if str(date_appointment) == str(dt_string):
+                            rec.PT_status = False
 
     @api.constrains("PT_age")
     def _check_age(self):
@@ -185,15 +203,18 @@ class HrPatient(models.Model):
             raise UserError(
                 "Your age is not correct age should between 0 - 100")
 
+        if self.PT_age < 0:
+            raise UserError(
+                "Your age is not correct age should between 0 - 100")
+
     @api.onchange('PT_birthday')
     def calculate_age(self):
         today = date.today()
-        try:
-            self.PT_age = today.year - self.PT_birthday.year - \
-                ((today.month, today.day) <
-                 (self.PT_birthday.month, self.PT_birthday.day))
-        except Exception:
-            pass
+        for rec in self:
+            if rec.PT_birthday:
+                rec.PT_age = today.year - rec.PT_birthday.year - \
+                    ((today.month, today.day) <
+                     (rec.PT_birthday.month, rec.PT_birthday.day))
 
     @api.constrains('PT_tel')
     def check_character_phone(self):
@@ -246,46 +267,3 @@ class HrPatient(models.Model):
             'view_mode': 'tree,form',
             'target': 'current',
         }
-
-    def button_prescriptions(self):
-        pass
-
-
-class HrPatient_Line(models.Model):
-
-    _name = "hr.patient.line"
-
-    relation_id = fields.Many2one('hr.patient')
-    labs_id = fields.Many2one('ir.lab')
-
-    lab_seq = fields.Char(
-        related='labs_id.lab_seq'
-    )
-
-    lab_names = fields.Char(
-        related='labs_id.patient_id.PT_name'
-    )
-
-    lab_type = fields.Selection(
-        related='labs_id.lab_type'
-    )
-
-    lab_doctor = fields.Char(
-        related='labs_id.lab_doctor'
-    )
-
-    lab_date = fields.Char(
-        related='labs_id.lab_date'
-    )
-
-    lab_insurance = fields.Boolean(
-        related='labs_id.lab_insurance'
-    )
-
-    lab_state = fields.Selection(
-        related='labs_id.lab_state'
-    )
-
-    lab_probility = fields.Float(
-        related='labs_id.lab_tests.lab_probility'
-    )

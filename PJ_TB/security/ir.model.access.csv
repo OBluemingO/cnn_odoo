@@ -5,7 +5,6 @@ access_model_ir_lab,model.ir.lab,model_ir_lab,,1,1,1,1
 access_model_ir_medicate,model.ir.medicate,model_ir_medicate,,1,1,1,1
 access_model_ir_medicate_list,model.ir.medicate_list,model_ir_medicate_list,,1,1,1,1
 access_model_ir_appointment,model.ir.appointment,model_ir_appointment,,1,1,1,1
-access_model_hr_patient_line,model.hr.patient.line,model_hr_patient_line,,1,1,1,1
 access_model_hr_doctor,model.hr.doctor,model_hr_doctor,,1,1,1,1
 access_model_ir_lab_test_blood,model.ir.lab.test.blood,model_ir_lab_test_blood,,1,1,1,1
 

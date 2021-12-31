@@ -7,33 +7,58 @@ class IRappointment(models.Model):
     _name = "ir.appointment"
     _rec_name = 'patient_id'
 
-    patient_id = fields.Many2one("hr.patient")
-    lab_id = fields.Many2one('ir.lab')
-
-    appointment_date = fields.Datetime(
-        string='Appointment Date',
+    patient_id = fields.Many2one(
+        "hr.patient",
         required=True,
     )
 
+    lab_id = fields.Many2one('ir.lab')
+
+    medicate_id = fields.Many2one(
+        'ir.medicate',
+        required=True,
+    )
+
+    medicate_seq = fields.Char(
+        related='medicate_id.medicate_seq'
+    )
+
+    appointment_date = fields.Date(
+        string='Appointment Date',
+        related='medicate_id.date_appointment_medicate'
+    )
+
+    medicate_dispent_count = fields.Integer(
+        related='medicate_id.medicate_dispent_count'
+    )
+
     appointment_comment = fields.Text(
-        string='Comment'
+        string='Comment',
+        required=True,
     )
 
-    appointment_doctor = fields.Char(
-        default=lambda self: self.create_by_doctor(),
-        string='Doctor',
-        readonly=True
+    doctors_id = fields.Many2one(
+        'hr.doctor',
+        default=lambda self: self.current_user(),
+        readonly=True,
     )
 
-    @api.constrains('appointment_date')
-    def _check_vaild_date_appointment(self):
-        if self.appointment_date < self.create_date or self.appointment_date == self.create_date:
-            raise ValidationError(_("Date Appointment Invaild"))
+    @api.onchange('patient_id')
+    def _onchange_domain_medicate(self):
+        for rec in self:
+            return {'domain': {'medicate_id': [('patient_id', '=', rec.patient_id.id)]}}
 
-    def create_by_doctor(self):
-        users = self.env["res.users"].search([])
-        for user in users:
-            user_create = self.env.user
-            if user == user_create:
-                user_id = user_create.partner_id
-                return user_id.name
+    @api.constrains('medicate_id')
+    def _check_medicate_unique(self):
+        patient_count = self.search_count(
+            [('medicate_id.medicate_seq', '=', self.medicate_seq), ('id', '!=', self.id)]
+        )
+        if patient_count > 0:
+            raise ValidationError(
+                _(f"Medicate Sequence {self.medicate_seq} Already Exists !"))
+
+    def current_user(self):
+        doctors = self.env['hr.doctor'].search([])
+        for doctor in doctors:
+            if doctor.DT_name == self.env.user:
+                return doctor.id

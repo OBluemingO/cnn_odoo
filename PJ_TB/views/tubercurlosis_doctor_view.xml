@@ -20,19 +20,19 @@
               <field name="DT_gender" />
             </group>
             <group>
-              <field name="DT_case_queue" />
+              <field name="DT_case_queue" force_save="1"/>
             </group>
           </group>
           <notebook>
             <page string="Total Case">
               <field name="patients">
-                <tree>
+                <tree create="false">
                   <field name="PT_name" />
                   <field name="PT_status"/>
                 </tree>
                 <form>
                   <group>
-                    <field name="PT_name" />
+                    <field name="PT_name" attrs="{'readonly': True}" />
                   </group>
                   <group>
                     <field name="PT_status" />
@@ -53,7 +53,7 @@
       <tree>
         <field name="DT_name" />
         <field name="DT_gender" />
-        <field name="DT_status" />
+        <field name="DT_status" force_save="1" />
       </tree>
     </field>
   </record>

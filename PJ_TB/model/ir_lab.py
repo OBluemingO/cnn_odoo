@@ -38,9 +38,6 @@ class Lab(models.Model):
         store=True,
     )
 
-    # ใบกำกับภาษี
-    lab_insurance = fields.Boolean(string="invoice to insurance")
-
     lab_state = fields.Selection(
         selection=[
             ("draft", "DRRAFT"),
@@ -52,11 +49,9 @@ class Lab(models.Model):
         string="State",
     )
 
-    patient_id = fields.Many2one("hr.patient")
-    partner_id = fields.Many2one("res.partner")
-
-    patient_relation_lines = fields.One2many(
-        'hr.patient.line', 'labs_id'
+    patient_id = fields.Many2one(
+        "hr.patient",
+        required=True,
     )
 
     lab_tests = fields.One2many(
@@ -67,9 +62,21 @@ class Lab(models.Model):
         'ir.lab_test_blood', 'lab_id',
     )
 
+    doctors_id = fields.Many2one(
+        'hr.doctor',
+        default=lambda self: self.current_user(),
+        readonly=True,
+    )
+
     timezone = pytz.timezone("Asia/Bangkok")
     now = datetime.now(tz=timezone)
     dt_string = now.strftime("%d/%m/%Y %H:%M")
+
+    def current_user(self):
+        doctors = self.env['hr.doctor'].search([])
+        for doctor in doctors:
+            if doctor.DT_name == self.env.user:
+                return doctor.id
 
     @api.model
     def create(self, vals):
@@ -111,9 +118,14 @@ class Lab(models.Model):
 
     def button_complate(self):
         for rec in self:
-            if not rec.lab_tests.lab_diagnosticresults:
-                raise ValidationError(_("Plase add lab test"))
-            self.lab_state = "complate"
+            if rec.lab_type == 'tb test':
+                if not rec.lab_tests.lab_diagnosticresults:
+                    raise ValidationError(_("Plase add imagie test"))
+                self.lab_state = "complate"
+            else:
+                if not rec.lab_blood_ids.lab_blood_range:
+                    raise ValidationError(_("Plase add Blood Test"))
+                self.lab_state = "complate"
 
     def button_invoice(self):
         self.lab_state = "invoice"
@@ -139,3 +151,15 @@ class Lab(models.Model):
 
             if rec.lab_type == 'blood test':
                 rec.lab_blood_ids = [(5, 0, 0)]
+
+    @api.constrains('lab_type')
+    def _check_lab_type_unique(self):
+        lab_type_count = self.search_count(
+            [
+                ('patient_id', '=', self.patient_id.PT_name),
+                ('lab_type', '=', self.lab_type),
+                ('id', '!=', self.id)
+            ]
+        )
+        if lab_type_count > 0:
+            raise ValidationError(_("Lab Type already exists !"))

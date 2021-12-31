@@ -7,7 +7,6 @@ class IRmedicatelist(models.Model):
     _rec_name = "medicament"
 
     medicate_id = fields.Many2one("ir.medicate")
-    # prescription_id = fields.Many2one("ir.prescription")
 
     medicament = fields.Selection(
         [
@@ -17,13 +16,13 @@ class IRmedicatelist(models.Model):
             ("ethambutol", "Ethambutol"),
             ("isoniazid and rifampicin", "Isoniazid and Rifampicin"),
         ],
-        default="isoniazid and rifampicin",
         required=True,
     )
 
     quantity = fields.Integer(
         default=1,
-        size=10
+        size=10,
+        required=True,
     )
 
     dose = fields.Char(required=True)
@@ -36,6 +35,8 @@ class IRmedicatelist(models.Model):
             ("9 m", "9 months"),
         ],
         string="Treament Duration",
+        required=True,
+        default='3 m'
     )
 
     frequency = fields.Selection(
@@ -45,6 +46,7 @@ class IRmedicatelist(models.Model):
             ("twice weekly", "Twice weekly"),
         ],
         default="daily",
+        required=True
     )
 
     unit_price = fields.Float(
@@ -72,11 +74,20 @@ class IRmedicatelist(models.Model):
                 if rec.medicament == 'isoniazid and rifampicin':
                     rec.unit_price = 200 * rec.quantity
 
-    # @api.constrains('medicament')
-    # def _check_dupicate_drug(self):
-    #     medicate_count = self.search_count(
-    #         [('medicament', '=', self.medicament), ('id', '!=', self.id)]
-    #     )
-    #     print(medicate_count, '===========================================')
-    #     if medicate_count > 0:
-    #         raise ValidationError(_("medicate already exists !"))
+    @api.onchange('quantity')
+    def _check_quantity_drug(self):
+        for rec in self:
+            if rec.quantity > 10:
+                raise ValidationError(_("Quantity Max is 10"))
+
+    @api.constrains('medicament')
+    def _medicament_unique(self):
+        for rec in self:
+            medicament_count = rec.search_count(
+                [
+                    ('medicament', '=', rec.medicament),
+                    ('medicate_id', '=', rec.medicate_id.medicate_seq)
+                ]
+            )
+            if medicament_count > 1:
+                raise ValidationError(_("medicament is duplicate !"))

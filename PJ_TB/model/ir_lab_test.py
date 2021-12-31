@@ -24,7 +24,6 @@ class LabTest(models.Model):
             ("tuberculosis", "TUBERCULOSIS"),
         ],
         string="Diagnostic Result",
-        # required=True,
         readonly=True,
         store=True,
     )

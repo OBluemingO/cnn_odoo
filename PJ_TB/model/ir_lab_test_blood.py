@@ -16,9 +16,11 @@ class LabTestBlood(models.Model):
     )
 
     lab_blood_range = fields.Char(
-        string="Blood Range"
+        string="Blood Range",
+        required=True
     )
 
     lab_blood_normal = fields.Char(
-        string="Blood Normal"
+        string="Blood Normal",
+        required=True
     )

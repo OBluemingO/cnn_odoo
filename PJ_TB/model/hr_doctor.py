@@ -15,6 +15,10 @@ class HrDoctor(models.Model):
             ("groups_id", "=", self.env.ref("PJ_TB.group_hospital_doctor").id)]
     )
 
+    user_id = fields.Integer(
+        related='DT_name.id'
+    )
+
     related_name = fields.Char(
         related='DT_name.partner_id.name'
     )
@@ -36,7 +40,8 @@ class HrDoctor(models.Model):
 
     DT_case_queue = fields.Integer(
         string='Queue For Case',
-        compute='_compute_increase'
+        compute='_compute_increase',
+        store=True
     )
 
     DT_status = fields.Selection(
@@ -47,7 +52,7 @@ class HrDoctor(models.Model):
         string="Queue Status",
         readonly=True,
         compute='_compute_status',
-        default='null'
+        store=True
     )
 
     patients = fields.One2many('hr.patient', 'doctors_id')
@@ -55,16 +60,16 @@ class HrDoctor(models.Model):
     @api.depends('DT_case_queue')
     def _compute_status(self):
         for rec in self:
-            print(rec.DT_case_queue, 'rec.DT_case_queue')
             rec.DT_status = 'null'
             if rec.DT_case_queue > 0:
-                print('1111111111111111111111111111')
                 rec.DT_status = 'no null'
 
+    @api.depends('patients.PT_status')
     def _compute_increase(self):
-        list_status = self.env['hr.patient'].search(
-            [('doctors_id', '=', self.related_name)])
         for rec in self:
+            list_status = rec.env['hr.patient'].search(
+                [('doctors_id', '=', rec.related_name)])
+
             rec.DT_case_queue = 0
             if list_status:
                 count = 0
