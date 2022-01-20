@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <record id="create_patient_menu_web" model="website.menu">
+    <field name="name">Create Patient</field>
+    <field name="url">/create_patient</field>
+    <field name="parent_id" ref="website.main_menu"/>
+    <field name="sequence" type="int">30</field>
+  </record>
+
+  <template id="form_patient">
+    <t t-call="web.frontend_layout">
+      <t t-set="title">Tuberculosis System</t>
+      <div id="wrap">
+        <div class="oe_structure">
+          <div class="container" style="25px;">
+            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+            <form style="margin-top:35px;">
+              <div class="row">
+                <div class="col">
+                  <label for="PT_id_card" class="form-label">Identity document</label>
+                  <input type="text" class="form-control" maxlength="13" placeholder="1234-56789-0" id="PT_id_card" name="PT_id_card" t-att-value="PT_id_card"/>
+                </div>
+                <div class="col">
+                  <label for="PT_name" class="form-label">Patient Name</label>
+                  <input type="text" class="form-control" placeholder="e.g Bob Mills" id="PT_name" name="PT_name" t-att-value="PT_name"/>
+                </div>
+              </div>
+              <div class="row" style="margin-top:35px;">
+                <div class="col">
+                  <label for="PT_tel" class="form-label">Phone</label>
+                  <input type="text" class="form-control" maxlength="10" placeholder="e.g 01-23456-789" id="PT_tel" name="PT_tel" t-att-value="PT_tel"/>
+                </div>
+                <div class="col">
+                  <label for="PT_gender" class="form-label">Gender</label>
+                  <select class="custom-select">
+                    <t t-foreach="patient_rec" t-as="patient">
+                      <option value='ชาย'>ชาย</option>
+                      <option value='หญิง'>หญิง</option>
+                      <option value='อื่นๆ'>อื่นๆ</option>
+                    </t>
+                  </select>
+                </div>
+              </div>
+              <div class="row" style="margin-top:35px;">
+                <div class="col">
+                  <label for="PT_email" class="form-label">Email</label>
+                  <input type="email" class="form-control" placeholder="e.g xxx@xxx.xxx" id="PT_email" name="PT_email" t-att-value="PT_email"/>
+                </div>
+                <div class="col">
+                  <label for="PT_email" class="form-label">Email</label>
+                  <input type="email" class="form-control" placeholder="e.g xxx@xxx.xxx" id="PT_email" name="PT_email" t-att-value="PT_email"/>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </t>
+  </template>
+
+  <template id="form_patient_done">
+    <t t-call="web.frontend_layout">
+      <t t-set="title">Tuberculosis System</t>
+      <div id="wrap">
+        <div class="oe_structure">
+          <div class="container">
+            <form role="form" action="/create/patient" method="POST">
+              <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+              <div class="form-group">
+                <label for="PT_name" class="control-label">Patient Name</label>
+                <input type="text" name="PT_name" t-att-value="PT_name" id="PT_name" class="form-control" required="required"/>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </t>
+  </template>
+
+</odoo>

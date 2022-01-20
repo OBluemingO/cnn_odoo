@@ -19,6 +19,11 @@
     <field name="arch" type="xml">
       <form string="Appointment">
         <sheet>
+          <div class="oe_title">
+            <h1>
+              <field name="appointment_seq"/>
+            </h1>
+          </div>
           <group>
             <group>
               <field name="patient_id" />
@@ -45,6 +50,7 @@
     <field name="model">ir.appointment</field>
     <field name="arch" type="xml">
       <tree>
+        <field name="appointment_seq" />
         <field name="patient_id" />
         <field name="appointment_date" />
         <field name="doctors_id" />

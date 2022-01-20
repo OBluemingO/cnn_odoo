@@ -70,7 +70,7 @@
         <field name="medicate_seq" />
         <field name="date_dispensing" />
         <field name="date_appointment_medicate" />
-        <field name="patient_id" />
+        <field name="patient_name" string="Patient"/>
         <field name="pharmacy" />
         <field name="medicate_state"/>
         <field name="medicate_dispent_count" />

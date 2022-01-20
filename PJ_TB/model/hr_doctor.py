@@ -1,6 +1,6 @@
 from datetime import date
 from odoo import models, fields, api, _
-from odoo.exceptions import AccessError, MissingError, UserError
+from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 
 
 class HrDoctor(models.Model):
@@ -21,10 +21,6 @@ class HrDoctor(models.Model):
 
     related_name = fields.Char(
         related='DT_name.partner_id.name'
-    )
-
-    DT_age = fields.Integer(
-        string="Age"
     )
 
     DT_gender = fields.Selection(
@@ -80,3 +76,14 @@ class HrDoctor(models.Model):
 
                 if count == len(list_status):
                     rec.DT_case_queue = 0
+
+    @api.constrains('DT_name')
+    def _check_name_doctor_unique(self):
+        name_doctor = self.search_count(
+            [
+                ('DT_name', '=', self.DT_name.id),
+                ('id', '!=', self.id)
+            ]
+        )
+        if name_doctor > 0:
+            raise ValidationError(_("Doctor already exists !"))

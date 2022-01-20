@@ -17,7 +17,7 @@
             </group>
           </group>
           <notebook>
-            <page string="result">
+            <page string="Diagnose">
               <group>
                 <field name="lab_diagnosticresults" force_save="1"/>
                 <field name="lab_diagnosticresults_Complications" attrs="{'invisible': [('lab_diagnosticresults','=', False)]}"/>

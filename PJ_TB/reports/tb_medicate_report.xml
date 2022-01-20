@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-  <report id="report_medicate_appointment" model="ir.medicate" string="Medicate Detail" report_type="qweb-html" name="PJ_TB.report_medicate_appointment" file="PJ_TB.report_medicate_appointment" />
+  <record id="report_medicate_appointment" model="ir.actions.report">
+    <field name="name">Medicate Invoice</field>
+    <field name="model">ir.medicate</field>
+    <field name="report_type">qweb-pdf</field>
+    <field name="report_name">PJ_TB.report_medicate_appointment_template</field>
+    <field name="report_file">PJ_TB.report_medicate_appointment_template</field>
+    <field name="binding_model_id" ref="model_ir_medicate"/>
+    <field name="binding_type">report</field>
+    <field name="groups_id" eval="[(4,ref('PJ_TB.group_hospital_manager'))]"/>
+  </record>
 
-  <template id="report_medicate_appointment">
-    <t t-foreach="docs" t-as="doc">
-      <t t-call="web.html_container">
+  <template id="report_medicate_appointment_template">
+    <t t-call="web.html_container">
+      <t t-foreach="docs" t-as="doc">
         <t t-call="web.external_layout">
           <div class="page">
             <h2>
@@ -20,7 +29,7 @@
               <strong>Appointment: </strong>
               <span t-field="doc.date_appointment_medicate"/>
             </div>
-            <div>
+            <div style="margin-bottom: 20px;">
               <strong>Status: </strong>
               <span t-field="doc.medicate_state"/>
             </div>
@@ -30,11 +39,10 @@
                   <th>Medicament</th>
                   <th>Dose</th>
                   <th>Quantity</th>
+                  <th>Unit price</th>
                 </tr>
               </thead>
-              <tbody>
-                <t t-set="drugs" t-value="doc.mapped('medicate_lists')"/>
-                <tr t-foreach="drugs" t-as="drug">
+                <tr t-foreach='doc.medicate_lists' t-as='drug'>
                   <td>
                     <span t-field="drug.medicament"/>
                   </td>
@@ -44,8 +52,18 @@
                   <td>
                     <span t-field="drug.quantity"/>
                   </td>
+                  <td>
+                    <span t-field="drug.unit_price"/>
+                  </td>
                 </tr>
-              </tbody>
+                <tr>
+                  <td colspan="3">
+                    Total Amount
+                  </td>
+                  <td>
+                    <span t-field="doc.medicate_total"/>
+                  </td>
+                </tr>
             </table>
           </div>
         </t>

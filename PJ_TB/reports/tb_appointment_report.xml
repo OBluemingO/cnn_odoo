@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <record id="action_report_appointment" model="ir.actions.report">
+    <field name="name">Appointment report</field>
+    <field name="model">hr.patient</field>
+    <field name="report_type">qweb-pdf</field>
+    <field name="report_name">PJ_TB.report_appointment_template</field>
+    <field name="report_file">PJ_TB.report_appointment_template</field>
+    <field name="binding_type">report</field>
+    <field name="groups_id" eval="[(4,ref('PJ_TB.group_hospital_manager'))]"/>
+  </record>
+
+  <template id="report_appointment_template">
+    <t t-call="web.html_container">
+      <t t-foreach="docs" t-as="doc">
+        <t t-call="web.external_layout">
+          <div class="page">
+            <h2 style="text-align: center;">
+              <strong>Appointment Detail</strong>
+            </h2>
+            <div>
+              <strong>Doctor: </strong>
+              <span t-field="doc.doctors_id.DT_name"/>
+            </div>
+            <div style="margin-bottom: 10px;">
+              <strong>Patient: </strong>
+              <span t-field="doc.PT_name"/>
+            </div>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Appointment Number</th>
+                  <th>Appointment Date</th>
+                  <th>Comment</th>
+                  <th>Appointment Count</th>
+                </tr>
+              </thead>
+              <tr t-foreach="doc.appointment" t-as="appoint">
+                <td>
+                  <span t-field="appoint.appointment_seq"/>
+                </td>
+                <td>
+                  <span t-field="appoint.appointment_date"/>
+                </td>
+                <td>
+                  <span t-field="appoint.appointment_comment"/>
+                </td>
+                <td>
+                  <span t-field="appoint.medicate_dispent_count"/>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </t>
+      </t>
+    </t>
+  </template>
+
+
+</odoo>
+

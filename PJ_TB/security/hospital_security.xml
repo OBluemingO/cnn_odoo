@@ -24,4 +24,18 @@
     <field name="groups" eval="[(4, ref('group_hospital_doctor'))]"/>
   </record>
 
+  <record id="medicate_record_doc_rule" model="ir.rule">
+    <field name="name">See Only His create medicate</field>
+    <field name="model_id" ref="model_ir_medicate"/>
+    <field name="domain_force">[('doctors_id.user_id','=',user.id)]</field>
+    <field name="groups" eval="[(4, ref('group_hospital_doctor'))]"/>
+  </record>
+
+  <record id="lab_record_doc_rule" model="ir.rule">
+    <field name="name">See Only His create medicate</field>
+    <field name="model_id" ref="model_ir_lab"/>
+    <field name="domain_force">[('doctors_id.user_id','=',user.id)]</field>
+    <field name="groups" eval="[(4, ref('group_hospital_doctor'))]"/>
+  </record>
+
 </odoo>

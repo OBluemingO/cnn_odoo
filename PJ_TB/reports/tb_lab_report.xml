@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <record id="action_report_lab" model="ir.actions.report">
+    <field name="name">Laboratory Detail</field>
+    <field name="model">hr.patient</field>
+    <field name="report_type">qweb-pdf</field>
+    <field name="report_name">PJ_TB.report_laboratory_template</field>
+    <field name="report_file">PJ_TB.report_laboratory_template</field>
+    <field name="binding_type">report</field>
+    <field name="groups_id" eval="[(4,ref('PJ_TB.group_hospital_manager'))]"/>
+  </record>
+
+  <template id="report_laboratory_template">
+    <t t-call="web.html_container">
+      <t t-foreach="docs" t-as="doc">
+        <t t-call="web.external_layout">
+          <div class="page">
+            <h2 style="text-align: center;">
+              <strong>Laboratory Detail</strong>
+            </h2>
+            <div style="margin-bottom: 10px;">
+                <strong>Patient Name: </strong>
+                <span t-field="doc.PT_name"/>
+            </div>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Laboratory Number</th>
+                  <th>Laboratory Start Date</th>
+                  <th>Laboratory End Date</th>
+                  <th>Laboratory Satus</th>
+                  <th>Laboratory Type</th>
+                </tr>
+              </thead>
+              <tr t-foreach="doc.lab_requsets" t-as="lab">
+                <td>
+                  <span t-field="lab.lab_seq"/>
+                </td>
+                <td>
+                  <span t-field="lab.lab_date"/>
+                </td>
+                <td>
+                  <span t-field="lab.lab_date_end"/>
+                </td>
+                <td>
+                  <span t-field="lab.lab_state"/>
+                </td>
+                <td>
+                  <span t-field="lab.lab_type"/>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </t>
+      </t>
+    </t>
+  </template>
+
+
+</odoo>
+

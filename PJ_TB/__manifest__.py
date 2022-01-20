@@ -4,6 +4,8 @@
     "version": "15.0.0.0.1",
     "depends": [
         "base",
+        # "web",
+        # "website",
     ],
     "data": [
         "security/ir.model.access.csv",
@@ -13,11 +15,18 @@
         "views/tubercurlosis_doctor_view.xml",
         "views/tubercurlosis_medicate_view.xml",
         "views/tubercurlosis_appointment_view.xml",
-        "data/lab_request_sequence.xml",
-        "data/medicate_sequence.xml",
         "views/tubercurlosis_lab_test_view.xml",
         "views/tubercurlosis_lab_blood_test_view.xml",
+        "wizards/wizard_patient_report.xml",
+        "wizards/wizard_doctor_report.xml",
+        "data/lab_request_sequence.xml",
+        "data/medicate_sequence.xml",
+        "data/appointment_sequence.xml",
         'reports/tb_medicate_report.xml',
+        'reports/tb_appointment_report.xml',
+        'reports/tb_lab_report.xml',
+        'reports/tb_lab_detail_report.xml',
+        'reports/tb_doctor_report.xml',
     ],
     "qweb": [
         # 'static/src/xml/nama_widget.xml',
@@ -26,7 +35,7 @@
     "auto_install": False,
     "installable": True,
     "application": True,
-    "category": "- Arkademy Part 1",
+    "category": "Website/Website",
     "summary": "Catat Penjualan Sederhana",
     "description": "-",
 }

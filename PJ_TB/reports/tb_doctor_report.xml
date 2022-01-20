@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <record id="action_report_doctor" model="ir.actions.report">
+    <field name="name">Doctor Report</field>
+    <field name="model">hr.doctor</field>
+    <field name="report_type">qweb-pdf</field>
+    <field name="report_name">PJ_TB.report_doctor_template</field>
+    <field name="report_file">PJ_TB.report_doctor_template</field>
+    <field name="binding_type">report</field>
+    <field name="groups_id" eval="[(4,ref('PJ_TB.group_hospital_manager'))]"/>
+  </record>
+
+  <template id="report_doctor_template">
+    <t t-call="web.html_container">
+      <t t-foreach="docs" t-as="doc">
+        <t t-call="web.external_layout">
+          <div class="page">
+            <h2 style="text-align: center;">
+              <strong>Doctor Total Case</strong>
+            </h2>
+            <div style="margin-bottom: 10px;">
+              <strong>Doctor: </strong>
+              <span t-field="doc.related_name"/>
+            </div>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Patient name</th>
+                  <th>status</th>
+                </tr>
+              </thead>
+              <tr t-foreach="doc.patients" t-as="pat">
+                <td>
+                  <span t-field="pat.PT_name"/>
+                </td>
+                <td>
+                  <t t-if="pat.PT_status == True">
+                    <p>เสร็จสิ้น หรือ เฝ้าติดตาม</p>
+                  </t>
+                  <t t-else="">
+                    <p>กำลังดำเนินการ</p>
+                  </t>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </t>
+      </t>
+    </t>
+  </template>
+
+
+</odoo>
+

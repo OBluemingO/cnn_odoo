@@ -22,10 +22,6 @@ class Lab(models.Model):
         required=True,
     )
 
-    lab_doctor = fields.Char(
-        string="Doctor", default=lambda self: self.create_by_doctor()
-    )
-
     lab_date = fields.Char(
         string="Date of Analysis",
         compute='cumpute_auto_date',
@@ -43,7 +39,6 @@ class Lab(models.Model):
             ("draft", "DRRAFT"),
             ("test", "TEST IN PROGRESS"),
             ("complate", "COMPLETED"),
-            ("invoice", "INVOICED"),
         ],
         default="draft",
         string="State",
@@ -66,6 +61,10 @@ class Lab(models.Model):
         'hr.doctor',
         default=lambda self: self.current_user(),
         readonly=True,
+    )
+
+    lab_doctor = fields.Char(
+        related='doctors_id.related_name'
     )
 
     timezone = pytz.timezone("Asia/Bangkok")
@@ -119,16 +118,13 @@ class Lab(models.Model):
     def button_complate(self):
         for rec in self:
             if rec.lab_type == 'tb test':
-                if not rec.lab_tests.lab_diagnosticresults:
+                if len(rec.lab_tests) == 0:
                     raise ValidationError(_("Plase add imagie test"))
-                self.lab_state = "complate"
+                rec.lab_state = "complate"
             else:
-                if not rec.lab_blood_ids.lab_blood_range:
+                if len(rec.lab_blood_ids) == 0:
                     raise ValidationError(_("Plase add Blood Test"))
-                self.lab_state = "complate"
-
-    def button_invoice(self):
-        self.lab_state = "invoice"
+                rec.lab_state = "complate"
 
     def button_draft(self):
         self.lab_state = "draft"
@@ -142,15 +138,6 @@ class Lab(models.Model):
                 _(f"Can't Delete Lab {self.patient_id.PT_name} In State {self.lab_state}"))
         else:
             return super(Lab, self).unlink()
-
-    @api.onchange('lab_type')
-    def _onchange_lab_type(self):
-        for rec in self:
-            if rec.lab_type == 'tb test':
-                rec.lab_tests = [(5, 0, 0)]
-
-            if rec.lab_type == 'blood test':
-                rec.lab_blood_ids = [(5, 0, 0)]
 
     @api.constrains('lab_type')
     def _check_lab_type_unique(self):

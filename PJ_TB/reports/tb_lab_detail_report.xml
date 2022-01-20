@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <record id="action_report_detail_lab" model="ir.actions.report">
+    <field name="name">Laboratory Detail</field>
+    <field name="model">ir.lab</field>
+    <field name="report_type">qweb-pdf</field>
+    <field name="report_name">PJ_TB.report_laboratory_detail_template</field>
+    <field name="report_file">PJ_TB.report_laboratory_detail_template</field>
+    <field name="binding_type">report</field>
+    <field name="groups_id" eval="[(4,ref('PJ_TB.group_hospital_manager'))]"/>
+  </record>
+
+  <template id="report_laboratory_detail_template">
+    <t t-call="web.html_container">
+      <t t-foreach="docs" t-as="doc">
+        <t t-call="web.external_layout">
+          <div class="page">
+            <h2 style="text-align: center;">
+              <strong>Laboratory Detail</strong>
+            </h2>
+            <div>
+                <strong>Patient Name: </strong>
+                <span t-field="doc.patient_id.PT_name"/>
+            </div>
+            <div>
+                <strong>Laboratory Type: </strong>
+                <span t-field="doc.lab_type"/>
+            </div>
+            <div>
+                <strong>Date Start: </strong>
+                <span t-field="doc.lab_date"/>
+            </div>
+            <div style="margin-bottom: 10px;">
+                <strong>Date End: </strong>
+                <span t-field="doc.lab_date_end"/>
+            </div>
+            <table class="table">
+              <t t-if="doc.lab_type == 'blood test'">
+                <thead>
+                  <tr>
+                    <th>Blood Type</th>
+                    <th>Blood Range</th>
+                    <th>Diagnose</th>
+                  </tr>
+                </thead>
+                <tr t-foreach="doc.lab_blood_ids" t-as="lab">
+                  <td>
+                    <span t-field="lab.lab_blood_type"/>
+                  </td>
+                  <td>
+                    <span t-field="lab.lab_blood_range"/>
+                  </td>
+                  <td>
+                    <span t-field="lab.lab_blood_diagnosticresults"/>
+                  </td>
+                </tr>
+              </t>
+              <t t-else="">
+               <thead>
+                  <tr>
+                    <th>Diagnostic</th>
+                    <th>Probility</th>
+                    <th>Complications</th>
+                  </tr>
+                </thead>
+                <tr t-foreach="doc.lab_tests" t-as="lab">
+                  <td>
+                    <span t-field="lab.lab_diagnosticresults"/>
+                  </td>
+                  <td>
+                    <span t-field="lab.lab_probility"/>
+                  </td>
+                  <td>
+                    <span t-field="lab.lab_diagnosticresults_Complications"/>
+                  </td>
+                </tr>
+              </t>
+            </table>
+          </div>
+        </t>
+      </t>
+    </t>
+  </template>
+
+
+</odoo>
+

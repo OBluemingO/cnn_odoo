@@ -14,10 +14,14 @@
             <group>
               <field name="lab_blood_range"/>
             </group>
-            <group>
-              <field name="lab_blood_normal"/>
-            </group>
           </group>
+          <notebook>
+            <page string="Diagnose">
+              <group>
+                <field name="lab_blood_diagnosticresults" force_save="1"/>
+              </group>
+            </page>
+          </notebook>
         </sheet>
       </form>
     </field>

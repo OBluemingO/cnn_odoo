@@ -5,7 +5,15 @@ from odoo.exceptions import ValidationError
 
 class IRappointment(models.Model):
     _name = "ir.appointment"
-    _rec_name = 'patient_id'
+    _rec_name = 'appointment_seq'
+
+    appointment_seq = fields.Char(
+        string="Appointment Number",
+        readonly=True,
+        required=True,
+        copy=False,
+        default="New"
+    )
 
     patient_id = fields.Many2one(
         "hr.patient",
@@ -43,6 +51,7 @@ class IRappointment(models.Model):
         readonly=True,
     )
 
+
     @api.onchange('patient_id')
     def _onchange_domain_medicate(self):
         for rec in self:
@@ -62,3 +71,13 @@ class IRappointment(models.Model):
         for doctor in doctors:
             if doctor.DT_name == self.env.user:
                 return doctor.id
+    
+    @ api.model
+    def create(self, vals):
+        if vals.get("appointment_seq", "New") == "New":
+            vals["appointment_seq"] = (
+                self.env["ir.sequence"].next_by_code(
+                    "appointment.sequence") or "New"
+            )
+        result = super(IRappointment, self).create(vals)
+        return result

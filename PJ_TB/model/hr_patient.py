@@ -1,6 +1,7 @@
 from datetime import date, datetime
 from odoo import models, fields, api, _
 from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
+from lxml import etree
 import pytz
 import re
 
@@ -10,6 +11,11 @@ class HrPatient(models.Model):
     _name = "hr.patient"
     _rec_name = "PT_name"
     _description = " detail about patient"
+
+    user_id = fields.Many2one(
+        'res.users',
+        string="Patient name",
+    )
 
     # general information
     PT_name = fields.Char(
@@ -58,16 +64,16 @@ class HrPatient(models.Model):
 
     PT_allergy = fields.Char(string="Allergy")
 
-    PT_blood = fields.Selection(
-        selection=[
-            ("a", "A"),
-            ("b", "B"),
-            ("ab", "AB"),
-            ("o", "O"),
-        ],
-        string="Blood type",
-        default="a",
-    )
+    # PT_blood = fields.Selection(
+    #     selection=[
+    #         ("a", "A"),
+    #         ("b", "B"),
+    #         ("ab", "AB"),
+    #         ("o", "O"),
+    #     ],
+    #     string="Blood type",
+    #     default="a",
+    # )
 
     PT_member = fields.Selection(
         selection=[
@@ -185,7 +191,7 @@ class HrPatient(models.Model):
             if list_state:
                 count = 0
                 for r in list_state:
-                    if r.lab_state == 'complate':
+                    if r.lab_state == 'complate' or r.lab_state == 'invoice':
                         count += 1
                 if count == len(list_state):
                     rec.PT_status = True
@@ -267,3 +273,13 @@ class HrPatient(models.Model):
             'view_mode': 'tree,form',
             'target': 'current',
         }
+
+    @api.model
+    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+        res = super(HrPatient, self).fields_view_get(view_id=view_id,
+                                                     view_type=view_type, toolbar=toolbar, submenu=submenu)
+        if view_type != 'search' and not(self.env.user.has_group('PJ_TB.group_hospital_manager')):
+            root = etree.fromstring(res['arch'])
+            root.set('create', 'false')
+            res['arch'] = etree.tostring(root)
+        return res

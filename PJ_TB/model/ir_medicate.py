@@ -1,6 +1,6 @@
 from odoo import models, fields, api, _
 from datetime import date, datetime
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 
 
 class IRmedicate(models.Model):
@@ -11,9 +11,14 @@ class IRmedicate(models.Model):
         "hr.patient",
         required=True,
     )
-    prescription_id = fields.Many2one("ir.prescription")
     medicate_lists = fields.One2many("ir.medicate_list", "medicate_id")
     appointment_ids = fields.One2many("ir.appointment", "medicate_id")
+
+    doctors_id = fields.Many2one(
+        'hr.doctor',
+        default=lambda self: self.current_user(),
+        readonly=True,
+    )
 
     patient_name = fields.Char(
         related='patient_id.PT_name'
@@ -64,13 +69,19 @@ class IRmedicate(models.Model):
         compute="compute_total_amount",
     )
 
-    @api.constrains("medicate_dispent_count")
+    def current_user(self):
+        doctors = self.env['hr.doctor'].search([])
+        for doctor in doctors:
+            if doctor.DT_name == self.env.user:
+                return doctor.id
+
+    @ api.constrains("medicate_dispent_count")
     def _check_dispent_count(self):
         for rec in self:
             if rec.medicate_dispent_count == 0:
                 raise UserError(_("Dispent count can't be '0'"))
 
-    @api.model
+    @ api.model
     def create(self, vals):
         if vals.get("medicate_seq", "New") == "New":
             vals["medicate_seq"] = (
@@ -84,7 +95,6 @@ class IRmedicate(models.Model):
     def onchange_count_patient(self):
         medicate = self.env['ir.medicate'].search_count(
             [('patient_id', '=', self.patient_id.id)])
-
         self.medicate_dispent_count = medicate+1
 
     @api.depends('medicate_lists.unit_price')
@@ -99,7 +109,7 @@ class IRmedicate(models.Model):
     def _check_create_and_vaild_date_appointment(self):
         for rec in self:
             list_appointment = rec.env['ir.medicate'].search(
-                [('patient_name', '=', rec.patient_name)]
+                [('patient_id', '=', rec.patient_id.id)]
             )
 
             if self.date_appointment_medicate < date.today() or self.date_appointment_medicate == date.today():

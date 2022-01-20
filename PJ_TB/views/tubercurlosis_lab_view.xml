@@ -20,10 +20,9 @@
     <field name="arch" type="xml">
       <form string="Lab">
         <header>
-          <button string="Draft" name="button_draft" type="object" class="btn-danger" confirm=" Are you sure that you need to do it." attrs="{'invisible': [('lab_state','in', ('draft','invoice','complate'))]}"/>
-          <button string="Test In Progress" name="button_test" type="object" class="oe_highlight" attrs="{'invisible': [('lab_state','in', ('test','invoice'))]}" />
-          <button string="Complate" name="button_complate" type="object" class="oe_highlight" attrs="{'invisible': [('lab_state','in', ('complate','draft'))]}" />
-          <button string="Invoice" name="button_invoice" type="object" class="oe_highlight" attrs="{'invisible': [('lab_state', 'in', ('invoice','draft','test'))]}" />
+          <button string="Draft" name="button_draft" type="object" class="btn-danger" confirm=" Are you sure that you need to do it." attrs="{'invisible': [('lab_state','in', ('draft','complate'))]}"/>
+          <button string="Test In Progress" name="button_test" type="object" class="oe_highlight" attrs="{'invisible': [('lab_state','=', 'test')]}" />
+          <button string="Complate" name="button_complate" type="object" class="oe_highlight" attrs="{'invisible': [('lab_state','in', ('draft','complate'))]}" />
           <field name="lab_state" widget="statusbar"/>
         </header>
         <sheet>
@@ -34,9 +33,9 @@
           </div>
           <group>
             <group>
-              <field name="patient_id" placeholder="Select Patient"/>
+              <field name="patient_id" placeholder="Select Patient" attrs="{'readonly': [('lab_state','!=', 'draft')]}"/>
               <field name="doctors_id"/>
-              <field name="lab_type"/>
+              <field name="lab_type" attrs="{'readonly': [('lab_state','!=', 'draft')]}"/>
             </group>
             <group>
               <field name="lab_date"/>
@@ -58,7 +57,6 @@
                 <tree>
                   <field name="lab_blood_type"/>
                   <field name="lab_blood_range"/>
-                  <field name="lab_blood_normal"/>
                 </tree>
               </field>
             </page>
@@ -79,8 +77,21 @@
         <field name="lab_type"/>
         <field name="lab_date"/>
         <field name="lab_date_end"/>
-        <field name="lab_state"/>
+        <field name="lab_state" decoration-danger="lab_state == 'draft'" decoration-info="lab_state == 'test'" decoration-success="lab_state == 'complate'"/>
       </tree>
     </field>
   </record>
+
+  <record id="ir_lab_view_search" model="ir.ui.view">
+    <field name="name">tb_lab_search</field>
+    <field name="model">ir.lab</field>
+    <field name="arch" type="xml">
+      <search string="Search Laboratory">
+        <field name="lab_seq" filter_domain="[('lab_seq','like',self)]"/>
+        <field name="patient_id" filter_domain="[('patient_id.PT_name','like',self)]"/>
+      </search>
+    </field>
+  </record>
+
+
 </odoo>
